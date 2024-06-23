@@ -6,9 +6,9 @@ Para 4 personas 2 tacos por persona.
 |---|---|
 |Harina de maiz precocida|200 g|
 |Secreto ibérico|320 g / taco|
-|[Guacamole](../Guacamole.md)|200 g|
+|[Guacamole](./Guacamole.md)|200 g|
 |Queso rallado|200g|
-|[Chimichurri](../Chimichurri.md)|80g|
+|[Chimichurri](./Chimichurri.md)|80g|
 
 ## Instrucciones
 
