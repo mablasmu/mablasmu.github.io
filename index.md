@@ -2,6 +2,6 @@
 
 ## Recetas
 
-![Recetas](index_recetas.md)
+[Recetas](index_recetas.md)
 
 ## Aeronáutica
