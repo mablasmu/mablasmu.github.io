@@ -4,6 +4,10 @@
 
 |Ingrediente|Cantidad|
 |---|---|
+|Aceite de oliva|
+|Aceitunas|1 puñado|
+|Carne picada|500 g|
+|Cebolla|1 uds|
 |Leche|  |
 |Mantequilla|25 g |
 |Oregano|  |
