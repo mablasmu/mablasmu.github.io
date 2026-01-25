@@ -1,0 +1,68 @@
+---
+layout: default
+title: Box Net Calculator
+---
+
+<h1>Box Net Calculator</h1>
+
+<div style="margin-bottom: 1rem;">
+  <label>
+    Length:
+    <input type="number" id="length" value="120">
+  </label>
+  <label>
+    Width:
+    <input type="number" id="width" value="80">
+  </label>
+  <label>
+    Height:
+    <input type="number" id="height" value="60">
+  </label>
+
+  <button onclick="drawNet()">Draw</button>
+</div>
+
+<svg id="svg" width="800" height="500"
+     viewBox="0 0 800 500"
+     style="border:1px solid #ccc"></svg>
+
+<script>
+function drawNet() {
+  const L = +document.getElementById("length").value;
+  const W = +document.getElementById("width").value;
+  const H = +document.getElementById("height").value;
+
+  const svg = document.getElementById("svg");
+  svg.innerHTML = "";
+
+  // scale: mm → px
+  const scale = Math.min(600 / (L * 4), 300 / (W + 2 * H));
+
+  const sL = L * scale;
+  const sW = W * scale;
+  const sH = H * scale;
+
+  const offsetX = 200;
+  const offsetY = 150;
+
+  const faces = [
+    // middle row
+    { x: offsetX + sL * 0, y: offsetY + sH, w: sL, h: sW },
+    { x: offsetX + sL * 1, y: offsetY + sH, w: sL, h: sW },
+    { x: offsetX + sL * 2, y: offsetY + sH, w: sL, h: sW },
+    { x: offsetX + sL * 3, y: offsetY + sH, w: sL, h: sW },
+
+    // top & bottom
+    { x: offsetX + sL, y: offsetY, w: sL, h: sH },
+    { x: offsetX + sL, y: offsetY + sH + sW, w: sL, h: sH }
+  ];
+
+  faces.forEach(f => {
+    svg.insertAdjacentHTML(
+      "beforeend",
+      `<rect x="${f.x}" y="${f.y}" width="${f.w}" height="${f.h}"
+             fill="none" stroke="black"/>`
+    );
+  });
+}
+</script>
