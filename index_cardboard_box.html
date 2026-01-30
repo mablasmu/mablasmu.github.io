@@ -29,7 +29,7 @@ title: Cardboard Box Calculator
 </div>
 
 <svg id="svg"
-     viewBox="0 0 600 600"
+     viewBox="0 0 1000 1000"
      preserveAspectRatio="xMidYMid meet"
      style="width:100%; height:auto; border:1px solid #ccc; display:block;">
 </svg>
@@ -62,7 +62,9 @@ function drawNet() {
   const B_2 = B_1 + H;
   const B_3 = B_2 + W/2;
   
-  const scale = Math.min(600 / A_5, 600 / B_3);
+
+
+  const scale = Math.min(900 / A_5, 900 / B_3);
   //const scale = 10
   
   const offsetX = 50;
@@ -118,37 +120,35 @@ function drawNet() {
     );
   });
 
-  const labels = [
-    {x:A_0*scale + offsetX-5, y:B_0*scale + offsetY-5, t:A_0},
-    {x:A_1*scale + offsetX-5, y:B_0*scale + offsetY-5, t:A_1},
-    {x:A_2*scale + offsetX-5, y:B_0*scale + offsetY-5, t:A_2},
-    {x:A_3*scale + offsetX-5, y:B_0*scale + offsetY-5, t:A_3},
-    {x:A_4*scale + offsetX-5, y:B_0*scale + offsetY-5, t:A_4},
-    {x:A_5*scale + offsetX-5, y:B_1*scale + offsetY-5, t:A_5},
-    {x:A_0*scale + offsetX-20, y:B_0*scale + offsetY+5, t:B_0},
-    {x:A_0*scale + offsetX-20, y:B_1*scale + offsetY+5, t:B_1},
-    {x:A_0*scale + offsetX-20, y:B_2*scale + offsetY+5, t:B_2},
-    {x:A_0*scale + offsetX-20, y:B_3*scale + offsetY+5, t:B_3},
+  const labels_A = [
+    {x:A_0*scale + offsetX, y:B_0*scale + offsetY-5, t:A_0},
+    {x:A_1*scale + offsetX, y:B_0*scale + offsetY-5, t:A_1},
+    {x:A_2*scale + offsetX, y:B_0*scale + offsetY-5, t:A_2},
+    {x:A_3*scale + offsetX, y:B_0*scale + offsetY-5, t:A_3},
+    {x:A_4*scale + offsetX, y:B_0*scale + offsetY-5, t:A_4},
+    {x:A_5*scale + offsetX, y:B_1*scale + offsetY-5, t:A_5},
   ]
 
-  labels.forEach(l => {
+  labels_A.forEach(l => {
     svg.insertAdjacentHTML(
       "beforeend",
-      `<text x="${l.x}" y="${l.y}"> ${l.t}</text>`
+      `<text x="${l.x}" y="${l.y}" text-anchor="middle"> ${l.t}</text>`
     );
   }); 
 
-  const faces = [
-    // middle row
-    { x: offsetX + sL * 0, y: offsetY + sH, w: sL, h: sW },
-    { x: offsetX + sL * 1, y: offsetY + sH, w: sL, h: sW },
-    { x: offsetX + sL * 2, y: offsetY + sH, w: sL, h: sW },
-    { x: offsetX + sL * 3, y: offsetY + sH, w: sL, h: sW },
+  const labels_B = [
+    {x:A_0*scale + offsetX-5, y:B_0*scale + offsetY+5, t:B_0},
+    {x:A_0*scale + offsetX-5, y:B_1*scale + offsetY+5, t:B_1},
+    {x:A_0*scale + offsetX-5, y:B_2*scale + offsetY+5, t:B_2},
+    {x:A_0*scale + offsetX-5, y:B_3*scale + offsetY+5, t:B_3},
+  ]
 
-    // top & bottom
-    { x: offsetX + sL, y: offsetY, w: sL, h: sH },
-    { x: offsetX + sL, y: offsetY + sH + sW, w: sL, h: sH }
-  ];
+  labels_B.forEach(l => {
+    svg.insertAdjacentHTML(
+      "beforeend",
+      `<text x="${l.x}" y="${l.y}" text-anchor="end"> ${l.t}</text>`
+    );
+  }); 
 
 }
 </script>
