@@ -126,7 +126,7 @@ function drawNet() {
     {x:A_2*scale + offsetX, y:B_0*scale + offsetY-5, t:A_2},
     {x:A_3*scale + offsetX, y:B_0*scale + offsetY-5, t:A_3},
     {x:A_4*scale + offsetX, y:B_0*scale + offsetY-5, t:A_4},
-    {x:A_5*scale + offsetX, y:B_1*scale + offsetY-5, t:A_5},
+    //{x:A_5*scale + offsetX, y:B_1*scale + offsetY-5, t:A_5},
   ]
 
   labels_A.forEach(l => {
@@ -134,7 +134,12 @@ function drawNet() {
       "beforeend",
       `<text x="${l.x}" y="${l.y}" text-anchor="middle"> ${l.t}</text>`
     );
-  }); 
+  });
+
+  svg.insertAdjacentHTML(
+    "beforeend",
+    `<text x="${A_5*scale + offsetX}" y="${B_1*scale + offsetY-5}" text-anchor="start"> ${A_5}</text>`
+  );
 
   const labels_B = [
     {x:A_0*scale + offsetX-5, y:B_0*scale + offsetY+5, t:B_0},
