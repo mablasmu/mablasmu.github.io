@@ -29,7 +29,7 @@ title: Cardboard Box Calculator
 </div>
 
 <svg id="svg"
-     viewBox="0 0 100 100"
+     viewBox="0 0 600 600"
      preserveAspectRatio="xMidYMid meet"
      style="width:100%; height:auto; border:1px solid #ccc; display:block;">
 </svg>
@@ -62,13 +62,11 @@ function drawNet() {
   const B_2 = B_1 + H;
   const B_3 = B_2 + W/2;
   
-  const scale = Math.min(100 / A_5, 100 / B_3);
+  const scale = Math.min(600 / A_5, 600 / B_3);
   //const scale = 10
   
-  const offsetX = 0.05;
-  const offsetY = 0.05;
-
-  const padding = 0.05;
+  const offsetX = 50;
+  const offsetY = 50;
 
   //const netWidth = (A_5 * scale) + offsetX + padding;
   //const netHeight = (B_3 * scale) + offsetY + padding;
