@@ -28,46 +28,6 @@ title: Box Net Calculator
   <button onclick="drawNet()">Draw</button>
 </div>
 
-<table>
-  <thead>
-    <tr>
-      <th>Parámetro</th>
-      <th>Valor A(cm)</th>
-      <th>Valor B(cm)</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>0</td>
-      <td id="A_0">0</td>
-      <td id="B_0">0</td>
-    </tr>
-    <tr>
-      <td>1</td>
-      <td id="A_1">0</td>
-      <td id="B_1">0</td>
-    </tr>
-    <tr>
-      <td>2</td>
-      <td id="A_2">0</td>
-      <td id="B_2">0</td>
-    </tr>
-    <tr>
-      <td>3</td>
-      <td id="A_3">0</td>
-      <td id="B_3">0</td>
-    </tr>
-    <tr>
-      <td>4</td>
-      <td id="A_4">0</td>
-    </tr>
-    <tr>
-      <td>5</td>
-      <td id="A_5">0</td>
-    </tr>
-  </tbody>
-</table>
-
 <svg id="svg" width="800" height="500"
      viewBox="0 0 800 500"
      style="border:1px solid #ccc">
@@ -94,15 +54,6 @@ function drawNet() {
   const B_2 = B_1 + H;
   const B_3 = B_2 + W/2;
   
-  document.getElementById("A_1").textContent = A_1
-  document.getElementById("A_2").textContent = A_2
-  document.getElementById("A_3").textContent = A_3
-  document.getElementById("A_4").textContent = A_4
-  document.getElementById("A_5").textContent = A_5
-  document.getElementById("B_1").textContent = B_1
-  document.getElementById("B_2").textContent = B_2
-  document.getElementById("B_3").textContent = B_3
-  
   const scale = Math.min(700 / A_5, 400 / B_3);
   
   const offsetX = 50;
@@ -110,23 +61,43 @@ function drawNet() {
 
   const lines = [
     {x_0: offsetX + A_0*scale, y_0: offsetY + B_0*scale, x_1: offsetX + A_4*scale, y_1: offsetY + B_0*scale},
-    {x_0: offsetX + A_0*scale, y_0: offsetY + B_1*scale, x_1: offsetX + A_5*scale, y_1: offsetY + B_1*scale},
-    {x_0: offsetX + A_0*scale, y_0: offsetY + B_2*scale, x_1: offsetX + A_5*scale, y_1: offsetY + B_2*scale},
-    {x_0: offsetX + A_0*scale, y_0: offsetY + B_3*scale, x_1: offsetX + A_4*scale, y_1: offsetY + B_3*scale},
     {x_0: offsetX + A_0*scale, y_0: offsetY + B_0*scale, x_1: offsetX + A_0*scale, y_1: offsetY + B_3*scale},
-    {x_0: offsetX + A_1*scale, y_0: offsetY + B_0*scale, x_1: offsetX + A_1*scale, y_1: offsetY + B_3*scale},
-    {x_0: offsetX + A_2*scale, y_0: offsetY + B_0*scale, x_1: offsetX + A_2*scale, y_1: offsetY + B_3*scale},
-    {x_0: offsetX + A_3*scale, y_0: offsetY + B_0*scale, x_1: offsetX + A_3*scale, y_1: offsetY + B_3*scale},
-    {x_0: offsetX + A_4*scale, y_0: offsetY + B_0*scale, x_1: offsetX + A_4*scale, y_1: offsetY + B_3*scale},
+    {x_0: offsetX + A_0*scale, y_0: offsetY + B_3*scale, x_1: offsetX + A_4*scale, y_1: offsetY + B_3*scale},
+    {x_0: offsetX + A_4*scale, y_0: offsetY + B_0*scale, x_1: offsetX + A_4*scale, y_1: offsetY + B_1*scale},
+    {x_0: offsetX + A_4*scale, y_0: offsetY + B_1*scale, x_1: offsetX + A_5*scale, y_1: offsetY + B_1*scale},
     {x_0: offsetX + A_5*scale, y_0: offsetY + B_1*scale, x_1: offsetX + A_5*scale, y_1: offsetY + B_2*scale},
+    {x_0: offsetX + A_5*scale, y_0: offsetY + B_2*scale, x_1: offsetX + A_4*scale, y_1: offsetY + B_2*scale},
+    {x_0: offsetX + A_4*scale, y_0: offsetY + B_2*scale, x_1: offsetX + A_4*scale, y_1: offsetY + B_3*scale},
+    {x_0: offsetX + A_1*scale, y_0: offsetY + B_0*scale, x_1: offsetX + A_1*scale, y_1: offsetY + B_1*scale},
+    {x_0: offsetX + A_2*scale, y_0: offsetY + B_0*scale, x_1: offsetX + A_2*scale, y_1: offsetY + B_1*scale},
+    {x_0: offsetX + A_3*scale, y_0: offsetY + B_0*scale, x_1: offsetX + A_3*scale, y_1: offsetY + B_1*scale},
+    {x_0: offsetX + A_1*scale, y_0: offsetY + B_2*scale, x_1: offsetX + A_1*scale, y_1: offsetY + B_3*scale},
+    {x_0: offsetX + A_2*scale, y_0: offsetY + B_2*scale, x_1: offsetX + A_2*scale, y_1: offsetY + B_3*scale},
+    {x_0: offsetX + A_3*scale, y_0: offsetY + B_2*scale, x_1: offsetX + A_3*scale, y_1: offsetY + B_3*scale},
   ]
-
 
   lines.forEach(l => {
     svg.insertAdjacentHTML(
       "beforeend",
       `<line x1="${l.x_0}" y1="${l.y_0}" x2="${l.x_1}" y2="${l.y_1}"
              fill="none" stroke="black"/>`
+    );
+  });
+
+  const dash_lines = [
+    {x_0: offsetX + A_0*scale, y_0: offsetY + B_1*scale, x_1: offsetX + A_4*scale, y_1: offsetY + B_1*scale},
+    {x_0: offsetX + A_0*scale, y_0: offsetY + B_2*scale, x_1: offsetX + A_4*scale, y_1: offsetY + B_2*scale},
+    {x_0: offsetX + A_1*scale, y_0: offsetY + B_1*scale, x_1: offsetX + A_1*scale, y_1: offsetY + B_2*scale},
+    {x_0: offsetX + A_2*scale, y_0: offsetY + B_1*scale, x_1: offsetX + A_2*scale, y_1: offsetY + B_2*scale},
+    {x_0: offsetX + A_3*scale, y_0: offsetY + B_1*scale, x_1: offsetX + A_3*scale, y_1: offsetY + B_2*scale},
+    {x_0: offsetX + A_4*scale, y_0: offsetY + B_1*scale, x_1: offsetX + A_4*scale, y_1: offsetY + B_2*scale},
+  ]
+
+  dash_lines.forEach(l => {
+    svg.insertAdjacentHTML(
+      "beforeend",
+      `<line x1="${l.x_0}" y1="${l.y_0}" x2="${l.x_1}" y2="${l.y_1}"
+             fill="none" stroke="black" stroke-dasharray="5,5"/>`
     );
   });
 
