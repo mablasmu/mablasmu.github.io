@@ -130,6 +130,28 @@ function drawNet() {
     );
   });
 
+  const labels = [
+    {x:A_0*scale + offsetX-5, y:B_0*scale + offsetY-5, t:A_0},
+    {x:A_1*scale + offsetX-5, y:B_0*scale + offsetY-5, t:A_1},
+    {x:A_2*scale + offsetX-5, y:B_0*scale + offsetY-5, t:A_2},
+    {x:A_3*scale + offsetX-5, y:B_0*scale + offsetY-5, t:A_3},
+    {x:A_4*scale + offsetX-5, y:B_0*scale + offsetY-5, t:A_4},
+    {x:A_5*scale + offsetX-5, y:B_1*scale + offsetY-5, t:A_5},
+    {x:A_0*scale + offsetX-20, y:B_0*scale + offsetY+5, t:B_0},
+    {x:A_0*scale + offsetX-20, y:B_1*scale + offsetY+5, t:B_1},
+    {x:A_0*scale + offsetX-20, y:B_2*scale + offsetY+5, t:B_2},
+    {x:A_0*scale + offsetX-20, y:B_3*scale + offsetY+5, t:B_3},
+  ]
+
+  labels.forEach(l => {
+    svg.insertAdjacentHTML(
+      "beforeend",
+      `<text x="${l.x}" y="${l.y}"> ${l.t}</text>`
+    );
+  });
+
+  
+
   const faces = [
     // middle row
     { x: offsetX + sL * 0, y: offsetY + sH, w: sL, h: sW },
@@ -142,5 +164,12 @@ function drawNet() {
     { x: offsetX + sL, y: offsetY + sH + sW, w: sL, h: sH }
   ];
 
+  //faces.forEach(f => {
+  //  svg.insertAdjacentHTML(
+  //    "beforeend",
+  //    `<rect x="${f.x}" y="${f.y}" width="${f.w}" height="${f.h}"
+  //           fill="none" stroke="black"/>`
+  //  );
+  //});
 }
 </script>
