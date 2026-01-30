@@ -1,9 +1,9 @@
 ---
 layout: default
-title: Calculadora de caja de cartón
+title: Cardboard Box Calculator
 ---
 
-<h1>Calculadora de caja de cartón</h1>
+<h1>Cardboard Box Calculator</h1>
 
 <div style="margin-bottom: 1rem;">
   <div>
@@ -28,10 +28,18 @@ title: Calculadora de caja de cartón
   <button onclick="drawNet()">Draw</button>
 </div>
 
-<svg id="svg" width="800" height="500"
+<svg id="svg"
      viewBox="0 0 800 500"
-     style="border:1px solid #ccc">
+     preserveAspectRatio="xMidYMid meet"
+     style="width:100%; height:auto; border:1px solid #ccc; display:block;">
 </svg>
+
+<!--
+  <svg id="svg" width="800" height="500"
+  viewBox="0 0 800 500"
+  style="border:1px solid #ccc">
+</svg>
+-->
 
 <script>
 function drawNet() {
@@ -54,10 +62,21 @@ function drawNet() {
   const B_2 = B_1 + H;
   const B_3 = B_2 + W/2;
   
-  const scale = Math.min(700 / A_5, 400 / B_3);
+  //const scale = Math.min(700 / A_5, 400 / B_3);
+  const scale = 10
   
   const offsetX = 50;
   const offsetY = 50;
+
+  const padding = 20;
+
+  const netWidth = (A_5 * scale) + offsetX + padding;
+  const netHeight = (B_3 * scale) + offsetY + padding;
+
+  svg.setAttribute(
+    "viewBox",
+    `0 0 ${netWidth} ${netHeight}`
+  );
 
   const lines = [
     {x_0: offsetX + A_0*scale, y_0: offsetY + B_0*scale, x_1: offsetX + A_4*scale, y_1: offsetY + B_0*scale},
@@ -119,9 +138,7 @@ function drawNet() {
       "beforeend",
       `<text x="${l.x}" y="${l.y}"> ${l.t}</text>`
     );
-  });
-
-  
+  }); 
 
   const faces = [
     // middle row
@@ -135,12 +152,5 @@ function drawNet() {
     { x: offsetX + sL, y: offsetY + sH + sW, w: sL, h: sH }
   ];
 
-  //faces.forEach(f => {
-  //  svg.insertAdjacentHTML(
-  //    "beforeend",
-  //    `<rect x="${f.x}" y="${f.y}" width="${f.w}" height="${f.h}"
-  //           fill="none" stroke="black"/>`
-  //  );
-  //});
 }
 </script>
