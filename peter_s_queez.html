@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vocabulario de inglés</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #fbfcfe;
+    --grid: #d9e5f3;
+    --ink: #1f3a8a;
+    --margin: #e5484d;
+    --pencil: #5b6270;
+    --marker: #ffe45c;
+    --ok: #1f8a4c;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; min-height: 100%; }
+  body {
+    font-family: "Nunito", system-ui, sans-serif;
+    color: var(--ink);
+    background-color: var(--paper);
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 24px 24px;
+    min-height: 100vh;
+  }
+  /* Red margin line like a school notebook */
+  body::before {
+    content: "";
+    position: fixed; top: 0; bottom: 0; left: 56px;
+    width: 2px; background: var(--margin); opacity: .7;
+    pointer-events: none;
+  }
+  main {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 40px 24px 60px 80px;
+  }
+  h1 {
+    font-family: "Patrick Hand", "Comic Sans MS", cursive;
+    font-weight: 400;
+    font-size: clamp(2.2rem, 7vw, 3.2rem);
+    line-height: 1.05;
+    margin: 0 0 8px;
+  }
+  p { line-height: 1.5; margin: 0 0 16px; }
+  .hint { color: var(--pencil); }
+  .hidden { display: none !important; }
+
+  /* Setup */
+  fieldset { border: 0; padding: 0; margin: 0 0 28px; }
+  legend { font-weight: 800; font-size: 1.1rem; margin-bottom: 12px; }
+  .topics { display: flex; flex-wrap: wrap; gap: 10px; }
+  .chip input { position: absolute; opacity: 0; pointer-events: none; }
+  .chip span {
+    display: inline-block;
+    padding: 8px 16px;
+    border: 2px solid var(--ink);
+    border-radius: 999px;
+    background: var(--paper);
+    cursor: pointer;
+    font-weight: 700;
+    user-select: none;
+  }
+  .chip input:checked + span { background: var(--marker); }
+  .chip input:focus-visible + span { outline: 3px solid var(--margin); outline-offset: 2px; }
+  .modes label { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 10px; cursor: pointer; }
+  .modes input { margin-top: 5px; accent-color: var(--ink); width: 18px; height: 18px; }
+
+  button {
+    font: inherit; font-weight: 800; font-size: 1.1rem;
+    color: var(--paper); background: var(--ink);
+    border: 0; border-radius: 10px;
+    padding: 12px 24px; cursor: pointer;
+    box-shadow: 0 4px 0 #122459;
+  }
+  button:active { transform: translateY(3px); box-shadow: 0 1px 0 #122459; }
+  button:focus-visible { outline: 3px solid var(--margin); outline-offset: 3px; }
+  button.secondary { background: var(--paper); color: var(--ink); border: 2px solid var(--ink); box-shadow: 0 4px 0 var(--ink); }
+  .error { color: var(--margin); font-weight: 700; min-height: 1.5em; }
+
+  /* Quiz */
+  .status { display: flex; justify-content: space-between; gap: 12px; font-weight: 700; color: var(--pencil); margin-bottom: 36px; }
+  .question { font-size: 1.1rem; margin-bottom: 4px; }
+  .word {
+    font-family: "Patrick Hand", "Comic Sans MS", cursive;
+    font-size: clamp(3rem, 12vw, 5.2rem);
+    line-height: 1.1;
+    margin: 0 0 28px;
+    word-break: break-word;
+  }
+  .word mark { background: linear-gradient(transparent 55%, var(--marker) 55%); color: inherit; padding: 0 4px; }
+  .answer {
+    width: 100%;
+    font-family: "Patrick Hand", "Comic Sans MS", cursive;
+    font-size: 2rem;
+    color: var(--ink);
+    background: transparent;
+    border: 0;
+    border-bottom: 3px solid var(--ink);
+    padding: 4px 2px;
+    margin-bottom: 20px;
+  }
+  .answer:focus { outline: none; border-bottom-color: var(--margin); }
+  .feedback { font-size: 1.15rem; font-weight: 700; min-height: 1.6em; margin-bottom: 16px; }
+  .feedback.bad { color: var(--margin); }
+  .feedback.good { color: var(--ok); }
+  .feedback .correct { font-family: "Patrick Hand", cursive; font-size: 1.6rem; font-weight: 400; color: var(--ink); }
+  .bar { height: 10px; border: 2px solid var(--ink); border-radius: 6px; margin-bottom: 36px; overflow: hidden; }
+  .bar div { height: 100%; width: 0; background: var(--marker); transition: width .3s; }
+
+  /* Result */
+  .result h1 { font-size: clamp(2.6rem, 9vw, 4rem); }
+  .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+
+  @media (max-width: 520px) {
+    body::before { left: 28px; }
+    main { padding: 28px 18px 48px 44px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .bar div { transition: none; }
+  }
+</style>
+</head>
+<body>
+<main>
+
+  <!-- Pantalla 1: elegir temas y modo -->
+  <section id="setup">
+    <h1>Vocabulario de inglés</h1>
+    <p class="hint">Elige qué quieres practicar y empieza.</p>
+
+    <fieldset>
+      <legend>Temas</legend>
+      <div class="topics" id="topics"></div>
+    </fieldset>
+
+    <fieldset class="modes">
+      <legend>Modo</legend>
+      <label><input type="radio" name="mode" value="all" checked>
+        <span><strong>Todas las palabras.</strong> Acierta cada palabra una vez. Las que falles volverán a salir.</span></label>
+      <label><input type="radio" name="mode" value="points">
+        <span><strong>Hasta 10 puntos.</strong> Cada acierto suma un punto y cada fallo resta uno.</span></label>
+    </fieldset>
+
+    <p class="error" id="setupError"></p>
+    <button id="startBtn">Empezar</button>
+  </section>
+
+  <!-- Pantalla 2: preguntas -->
+  <section id="quiz" class="hidden">
+    <div class="status">
+      <span id="statusText"></span>
+      <span id="errorsText"></span>
+    </div>
+    <div class="bar"><div id="barFill"></div></div>
+
+    <p class="question">¿Cómo se escribe en inglés?</p>
+    <p class="word"><mark id="word"></mark></p>
+
+    <form id="answerForm" autocomplete="off">
+      <input id="answer" class="answer" type="text" aria-label="Tu respuesta en inglés"
+             autocapitalize="off" autocorrect="off" spellcheck="false">
+      <p class="feedback" id="feedback" aria-live="polite"></p>
+      <button type="submit" id="checkBtn">Comprobar</button>
+      <button type="button" id="nextBtn" class="hidden">Continuar</button>
+    </form>
+  </section>
+
+  <!-- Pantalla 3: resultado -->
+  <section id="result" class="result hidden">
+    <h1>¡Enhorabuena, has aprobado el examen!</h1>
+    <p id="resultText"></p>
+    <div class="actions">
+      <button id="againBtn">Repetir</button>
+      <button id="menuBtn" class="secondary">Cambiar temas</button>
+    </div>
+  </section>
+
+</main>
+
+<script>
+/* =========================================================
+   LISTA DE PALABRAS
+   Para añadir un tema nuevo, copia uno de los bloques.
+   Para añadir palabras: ['inglés', 'español'],
+   "on: true" hace que el tema salga marcado al abrir la web.
+   ========================================================= */
+const TEMAS = [
+  { nombre: 'Actividades', on: true, palabras: [
+    ['fish', 'pescar'],
+    ['play football', 'jugar al fútbol'],
+    ['play tennis', 'jugar al tenis'],
+    ['play basketball', 'jugar al baloncesto'],
+    ['play the guitar', 'tocar la guitarra'],
+    ['play the piano', 'tocar el piano'],
+    ['ride a bike', 'montar en bicicleta'],
+    ['sing', 'cantar'],
+    ['swim', 'nadar'],
+  ]},
+  { nombre: 'Ropa', on: false, palabras: [
+    ['cap', 'gorra'],
+    ['skirt', 'falda'],
+    ['jacket', 'chaqueta'],
+    ['t-shirt', 'camiseta'],
+    ['socks', 'calcetines'],
+    ['trousers', 'pantalones largos'],
+    ['shoes', 'zapatos'],
+    ['shorts', 'pantalones cortos'],
+  ]},
+  { nombre: 'Animales', on: false, palabras: [
+    ['tiger', 'tigre'],
+    ['elephant', 'elefante'],
+    ['snake', 'serpiente'],
+    ['monkey', 'mono'],
+    ['crocodile', 'cocodrilo'],
+    ['hippo', 'hipopótamo'],
+    ['giraffe', 'jirafa'],
+  ]},
+  { nombre: 'Días de la semana', on: false, palabras: [
+    ['monday', 'lunes'],
+    ['tuesday', 'martes'],
+    ['wednesday', 'miércoles'],
+    ['thursday', 'jueves'],
+    ['friday', 'viernes'],
+    ['saturday', 'sábado'],
+    ['sunday', 'domingo'],
+  ]},
+  { nombre: 'Estaciones', on: false, palabras: [
+    ['spring', 'primavera'],
+    ['summer', 'verano'],
+    ['autumn', 'otoño'],
+    ['winter', 'invierno'],
+  ]},
+  { nombre: 'Colores', on: false, palabras: [
+    ['golden', 'dorado'],
+    ['green', 'verde'],
+    ['red', 'rojo'],
+    ['silver', 'plateado'],
+    ['black', 'negro'],
+    ['blue', 'azul'],
+    ['pink', 'rosa'],
+    ['grey', 'gris'],
+  ]},
+  { nombre: 'Números', on: false, palabras: [
+    ['one', 'uno'],
+    ['two', 'dos'],
+    ['three', 'tres'],
+    ['four', 'cuatro'],
+    ['five', 'cinco'],
+    ['six', 'seis'],
+    ['seven', 'siete'],
+    ['eight', 'ocho'],
+    ['nine', 'nueve'],
+    ['ten', 'diez'],
+  ]},
+];
+
+const PUNTOS_PARA_APROBAR = 10;   // modo "Hasta 10 puntos"
+const IGNORAR_MAYUSCULAS = true;  // "Monday" y "monday" cuentan igual
+
+/* ========================================================= */
+
+const $ = id => document.getElementById(id);
+const screens = { setup: $('setup'), quiz: $('quiz'), result: $('result') };
+
+// Construir los botones de temas
+TEMAS.forEach((t, i) => {
+  const label = document.createElement('label');
+  label.className = 'chip';
+  label.innerHTML = `<input type="checkbox" value="${i}" ${t.on ? 'checked' : ''}><span>${t.nombre}</span>`;
+  $('topics').appendChild(label);
+});
+
+let palabras = [], queez = [], mode = 'all';
+let actual = null, anterior = null, fallos = 0, puntos = 0, esperando = false;
+
+function show(name) {
+  Object.values(screens).forEach(s => s.classList.add('hidden'));
+  screens[name].classList.remove('hidden');
+}
+
+function normalizar(s) {
+  s = s.trim().replace(/\s+/g, ' ');
+  return IGNORAR_MAYUSCULAS ? s.toLowerCase() : s;
+}
+
+function escapeHtml(s) {
+  return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function empezar() {
+  const elegidos = [...document.querySelectorAll('#topics input:checked')].map(c => +c.value);
+  if (elegidos.length === 0) {
+    $('setupError').textContent = 'Marca al menos un tema para empezar.';
+    return;
+  }
+  $('setupError').textContent = '';
+  mode = document.querySelector('input[name="mode"]:checked').value;
+  palabras = elegidos.flatMap(i => TEMAS[i].palabras);
+  queez = palabras.slice();
+  fallos = 0; puntos = 0; anterior = null;
+  show('quiz');
+  siguiente();
+}
+
+function elegirPalabra(lista) {
+  // Igual que en el script: no repetir la misma palabra dos veces seguidas
+  let p;
+  do { p = lista[Math.floor(Math.random() * lista.length)]; }
+  while (p === anterior && lista.length > 1);
+  anterior = p;
+  return p;
+}
+
+function actualizarEstado() {
+  if (mode === 'all') {
+    $('statusText').textContent = queez.length === 1
+      ? 'Queda 1 palabra por acertar'
+      : `Quedan ${queez.length} palabras por acertar`;
+    $('barFill').style.width = `${(1 - queez.length / palabras.length) * 100}%`;
+  } else {
+    $('statusText').textContent = `Tienes ${puntos} ${Math.abs(puntos) === 1 ? 'punto' : 'puntos'}`;
+    $('barFill').style.width = `${Math.max(0, puntos) / PUNTOS_PARA_APROBAR * 100}%`;
+  }
+  $('errorsText').textContent = fallos ? `Fallos: ${fallos}` : '';
+}
+
+function siguiente() {
+  const terminado = mode === 'all' ? queez.length === 0 : puntos >= PUNTOS_PARA_APROBAR;
+  if (terminado) return terminar();
+
+  actual = elegirPalabra(mode === 'all' ? queez : palabras);
+  $('word').textContent = actual[1];
+  $('answer').value = '';
+  $('answer').disabled = false;
+  $('feedback').textContent = '';
+  $('feedback').className = 'feedback';
+  $('checkBtn').classList.remove('hidden');
+  $('nextBtn').classList.add('hidden');
+  esperando = false;
+  actualizarEstado();
+  $('answer').focus();
+}
+
+function comprobar(e) {
+  e.preventDefault();
+  if (esperando) return continuar();
+  const respuesta = $('answer').value;
+  if (!respuesta.trim()) { $('answer').focus(); return; }
+
+  if (normalizar(respuesta) === normalizar(actual[0])) {
+    if (mode === 'all') queez.splice(queez.indexOf(actual), 1);
+    else puntos++;
+    $('feedback').textContent = '¡Bien!';
+    $('feedback').className = 'feedback good';
+    actualizarEstado();
+    esperando = true;
+    $('answer').disabled = true;
+    setTimeout(() => { if (esperando) siguiente(); }, 600);
+  } else {
+    fallos++;
+    if (mode === 'points') puntos--;
+    $('feedback').innerHTML =
+      `Mal, "${escapeHtml(actual[1])}" se escribe <span class="correct">${escapeHtml(actual[0])}</span>`;
+    $('feedback').className = 'feedback bad';
+    $('answer').disabled = true;
+    $('checkBtn').classList.add('hidden');
+    $('nextBtn').classList.remove('hidden');
+    $('nextBtn').focus();
+    esperando = true;
+    actualizarEstado();
+  }
+}
+
+function continuar() { siguiente(); }
+
+function terminar() {
+  $('resultText').textContent = fallos === 0
+    ? '¡No has tenido ni un solo fallo!'
+    : `Has tenido ${fallos} ${fallos === 1 ? 'fallo' : 'fallos'}.`;
+  show('result');
+  $('againBtn').focus();
+}
+
+$('startBtn').addEventListener('click', empezar);
+$('answerForm').addEventListener('submit', comprobar);
+$('nextBtn').addEventListener('click', continuar);
+$('againBtn').addEventListener('click', empezar);
+$('menuBtn').addEventListener('click', () => show('setup'));
+</script>
+</body>
+</html>
